@@ -2,14 +2,18 @@ import { db } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import { updatePost } from "@/app/actions/posts";
 
-export default async function EditPostPage({ params }: { params: { id: string } }) {
+export default async function EditPostPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   const post = await db.post.findUnique({
-    where: { id: params.id },
+    where: { id },
     include: { categories: true },
   });
   const categories = await db.category.findMany({ orderBy: { name: "asc" } });
 
   if (!post) return notFound();
+
+  type UiCategory = { id: string; name: string };
+  type PostCategoryJoin = { categoryId: string };
 
   return (
     <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-10">
@@ -26,13 +30,13 @@ export default async function EditPostPage({ params }: { params: { id: string } 
         <div>
           <label className="block text-sm font-medium">Categories</label>
           <div className="mt-2 grid sm:grid-cols-2 gap-2">
-            {categories.map((c) => (
+            {categories.map((c: UiCategory) => (
               <label key={c.id} className="flex items-center gap-2 text-sm">
                 <input
                   type="checkbox"
                   name="categoryIds"
                   value={c.id}
-                  defaultChecked={post.categories.some((pc) => pc.categoryId === c.id)}
+                  defaultChecked={post.categories.some((pc: PostCategoryJoin) => pc.categoryId === c.id)}
                 />
                 {c.name}
               </label>
