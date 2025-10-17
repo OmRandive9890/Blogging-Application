@@ -36,8 +36,8 @@ async function getData(categorySlug?: string) {
   return { categories, posts };
 }
 
-export default async function BlogList({ searchParams }: { searchParams: { category?: string } }) {
-  const categorySlug = searchParams?.category;
+export default async function BlogList({ searchParams }: { searchParams: Promise<{ category?: string }> }) {
+  const { category: categorySlug } = await searchParams;
   const { categories, posts } = await getData(categorySlug);
 
   return (
