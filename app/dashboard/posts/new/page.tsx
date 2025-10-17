@@ -19,7 +19,7 @@ export default async function NewPostPage() {
         <div>
           <label className="block text-sm font-medium">Categories</label>
           <div className="mt-2 grid sm:grid-cols-2 gap-2">
-            {categories.map((c) => (
+            {categories.map((c: { id: string; name: string }) => (
               <label key={c.id} className="flex items-center gap-2 text-sm">
                 <input type="checkbox" name="categoryIds" value={c.id} /> {c.name}
               </label>

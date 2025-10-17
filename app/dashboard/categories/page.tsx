@@ -24,7 +24,7 @@ export default async function CategoriesDashboard() {
       </form>
 
       <div className="mt-8 divide-y border rounded-lg bg-white dark:bg-black">
-        {categories.map((c) => (
+        {categories.map((c: { id: string; name: string; description: string | null }) => (
           <div key={c.id} className="p-4 flex items-center justify-between gap-4">
             <div>
               <div className="font-medium">{c.name}</div>
